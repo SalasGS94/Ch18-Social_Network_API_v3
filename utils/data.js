@@ -1,15 +1,21 @@
 const userSeed = [
     {
         username: 'GGS',
-        email: 'salasgrg@gmail.com'
+        email: 'salasgrg@gmail.com',
+        friends: [],
+        thoughts: []
     },
     {
         username: 'Salas',
-        email: 'gergasa94@yahoo.com'
+        email: 'gergasa94@yahoo.com',
+        friends: [],
+        thoughts: []
     },
     {
         username: 'Xerus',
-        email: 'xerus123@hotmail.com'
+        email: 'xerus123@hotmail.com',
+        friends: [],
+        thoughts: []
     }
 ];
 

@@ -1,10 +1,11 @@
 const { User, Thought } = require('../models');
+const {Schema} = require('mongoose')
 
 module.exports = {
   // Get all users
   async getUsers(req, res) {
     try {
-      const users = await User.find();
+      const users = await User.find().select('-__v');
       res.json(users);
     } catch (err) {
       res.status(500).json(err);
@@ -13,8 +14,7 @@ module.exports = {
   // Get a single user
   async getSingleUser(req, res) {
     try {
-      const user = await User.findOne({ _id: req.params.userId })
-        .select('-__v');
+      const user = await User.findOne({ _id: req.params.userId }).select('-__v');
 
       if (!user) {
         return res.status(404).json({ message: 'No user with that ID' });
@@ -77,7 +77,7 @@ module.exports = {
         { $addToSet: { friends: req.params.friendId } },
         { new: true }
       );
-
+      console.log(friendNew)
       if (!friendNew) {
         return res.status(404).json({ message: 'No user with this id!' });
       }
@@ -92,7 +92,7 @@ module.exports = {
     try {
       const delFriend = await User.findOneAndUpdate(
         { _id: req.params.userId },
-        { $pull: { reactions: { reactionId: req.params.friendId } } },
+        { $pull: { friends: req.params.friendId } },
         { new: true}
       );
 
