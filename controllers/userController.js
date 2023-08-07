@@ -34,7 +34,7 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // Updates and application using the findOneAndUpdate method. Uses the ID, and the $set operator in mongodb to inject the request body. Enforces validation.
+  // Update user
   async updateUser(req, res) {
     try {
       const user = await User.findOneAndUpdate(
@@ -53,7 +53,7 @@ module.exports = {
       res.status(500).json(err);
     }
   },  
-  // Delete a user and associated apps
+  // Delete user
   async deleteUser(req, res) {
     try {
       const user = await User.findOneAndDelete({ _id: req.params.userId });
@@ -68,4 +68,41 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+
+  // Create friend to a user
+  async createFriend(req, res) {
+    try {
+      const friendNew = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $addToSet: { friends: req.params.friendId } },
+        { new: true }
+      );
+
+      if (!friendNew) {
+        return res.status(404).json({ message: 'No user with this id!' });
+      }
+
+      res.json(friendNew);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+  // Delete friend
+  async deleteFriend(req, res) {
+    try {
+      const delFriend = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $pull: { reactions: { reactionId: req.params.friendId } } },
+        { new: true}
+      );
+
+      if (!delFriend) {
+        return res.status(404).json({ message: 'No user with this id!' });
+      }
+
+      res.json({message: 'Friend deleted'});
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },  
 };
